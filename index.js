@@ -33,7 +33,8 @@ const ManagerQuestions = () => {
             message: 'Please Enter The Team Manager\'s Office Number'
         }])
         .then(({name, id, email, officeNumber}) => {
-            //new up a manager class and push the data into the array
+            staffArray.manager.push(new Manager(name, id, email, officeNumber))
+            EmployeeQuestions();
         })
 
   };
@@ -62,20 +63,45 @@ const EmployeeQuestions = () => {
             message: 'Please Enter The Employee\'s Email Address'
         }
         .then(({name, id, email, role}) => {
-            if(role === 'Engineer'){
+            if(role === 'Engineer')
+            {
                 return inquirer.prompt([{
                     type: 'input',
                     name: 'github',
                     message: 'What is the Engineer\'s Github username?'
+                },
+                {
+                    type:'confirm',
+                    name:'addEmployee',
+                    message: 'Whould you like to add another employee?',
+                    default: false
                 }])
+                .then(({github, addEmployee}) => {
+                    staffArray.engineer.push(new Engineer(name, id, email, github))
+                    if (addEmployee) {
+                        return EmployeeQuestions();
+                    }
+                })
             }
-
-            if(role === 'Intern'){
+            else if(role === 'Intern')
+            {
                 return inquirer.prompt([{
                     type: 'input',
                     name: 'school',
                     message: 'Please enter Intern\'s school name'
+                },
+                {
+                    type:'confirm',
+                    name:'addEmployee',
+                    message: 'Whould you like to add another employee?',
+                    default: false
                 }])
+                .then(({school, addEmployee}) => {
+                    staffArray.intern.push(new Intern(name, id, email, school))
+                    if (addEmployee) {
+                        return EmployeeQuestions();
+                    }
+                })            
             }
 
         })
