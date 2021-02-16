@@ -34,17 +34,17 @@ const ManagerQuestions = () => {
         }])
         .then(({name, id, email, officeNumber}) => {
             staffArray.manager.push(new Manager(name, id, email, officeNumber))
+            console.log(staffArray);
             EmployeeQuestions();
         })
-
   };
 
 const EmployeeQuestions = () => {
     return inquirer.prompt([
         {
             type: 'list',
-            name: 'role',
-            message:'Would you like to enter another employee?',
+            name: 'choice',
+            message:'What type of employee would you like to add or are you finished?',
             choices: ['Engineer', 'Intern', 'I am done building my team']
         },
         {
@@ -61,9 +61,9 @@ const EmployeeQuestions = () => {
             type: 'input',
             name: 'email',
             message: 'Please Enter The Employee\'s Email Address'
-        }
-        .then(({name, id, email, role}) => {
-            if(role === 'Engineer')
+        }])
+        .then(({name, id, email, choice}) => {
+            if(choice === 'Engineer')
             {
                 return inquirer.prompt([{
                     type: 'input',
@@ -78,12 +78,14 @@ const EmployeeQuestions = () => {
                 }])
                 .then(({github, addEmployee}) => {
                     staffArray.engineer.push(new Engineer(name, id, email, github))
+                    console.log(staffArray);
+
                     if (addEmployee) {
                         return EmployeeQuestions();
                     }
                 })
             }
-            else if(role === 'Intern')
+            else if(choice === 'Intern')
             {
                 return inquirer.prompt([{
                     type: 'input',
@@ -98,14 +100,30 @@ const EmployeeQuestions = () => {
                 }])
                 .then(({school, addEmployee}) => {
                     staffArray.intern.push(new Intern(name, id, email, school))
+                    console.log(staffArray);
+
                     if (addEmployee) {
                         return EmployeeQuestions();
                     }
                 })            
             }
-
+            else if(choice === 'I am done building my team')
+            {
+                //render HTML
+            }
         })
-    ])
 };
 
-
+  //function to initialize app
+  const init = async () => {
+    console.log('Welcome To The Team Profile Generator!');
+    try {
+        ManagerQuestions(); //Prompt manager for manager information
+    } catch (err) {
+      console.log(err);
+      console.log('There was an error with user input');
+    }
+  };
+  
+  // Function call to initialize app
+  init();
