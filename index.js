@@ -2,6 +2,8 @@ const inquirer = require('inquirer');
 const Manager = require('./lib/Manager.js');
 const Engineer = require('./lib/Engineer.js');
 const Intern = require('./lib/Intern.js');
+const writeToFile = require('./src/writeToFile.js');
+const generateMarkup = require('./src/GenerateMarkup.js');
 
 const staffArray = {
     'manager': [], 
@@ -33,7 +35,6 @@ const ManagerQuestions = () => {
         }])
         .then(({name, id, email, officeNumber}) => {
             staffArray.manager.push(new Manager(name, id, email, officeNumber))
-            console.log(staffArray);
             EmployeeQuestions();
         })
   };
@@ -45,73 +46,79 @@ const EmployeeQuestions = () => {
             name: 'choice',
             message:'What type of employee would you like to add or are you finished?',
             choices: ['Engineer', 'Intern', 'I am done building my team']
-        },
-        {
-            type: 'input',
-            name: 'name',
-            message: 'Please Enter The Employee\'s Name'
-        },
-        {
-            type: 'input',
-            name: 'id',
-            message: 'Please Enter The Employee\'s Employee ID'
-        },
-        {
-            type: 'input',
-            name: 'email',
-            message: 'Please Enter The Employee\'s Email Address'
         }])
-        .then(({name, id, email, choice}) => {
+        .then(({choice}) => {
             if(choice === 'Engineer')
             {
-                return inquirer.prompt([{
+                return inquirer.prompt([
+                {
+                    type: 'input',
+                    name: 'name',
+                    message: 'Please Enter The Engineer\'s Name'
+                },
+                {
+                    type: 'input',
+                    name: 'id',
+                    message: 'Please Enter The Engineer\'s Employee ID'
+                },
+                {
+                    type: 'input',
+                    name: 'email',
+                    message: 'Please Enter The Engineer\'s Email Address'
+                },    
+                {
                     type: 'input',
                     name: 'github',
                     message: 'What is the Engineer\'s Github username?'
-                },
-                {
-                    type:'confirm',
-                    name:'addEmployee',
-                    message: 'Whould you like to add another employee?',
-                    default: false
-                }])
-                .then(({github, addEmployee}) => {
+                }
+            ])
+            .then(({name, id, email, github}) => {
                     staffArray.engineer.push(new Engineer(name, id, email, github))
-                    console.log(staffArray);
 
-                    if (addEmployee) {
-                        return EmployeeQuestions();
-                    }
+                    return EmployeeQuestions();
                 })
             }
             else if(choice === 'Intern')
             {
-                return inquirer.prompt([{
+                return inquirer.prompt([
+                {
+                    type: 'input',
+                    name: 'name',
+                    message: 'Please Enter The Intern\'s Name'
+                },
+                {
+                    type: 'input',
+                    name: 'id',
+                    message: 'Please Enter The Intern\'s Employee ID'
+                },
+                {
+                    type: 'input',
+                    name: 'email',
+                    message: 'Please Enter The Intern\'s Email Address'
+                },    
+                {
                     type: 'input',
                     name: 'school',
                     message: 'Please enter Intern\'s school name'
-                },
-                {
-                    type:'confirm',
-                    name:'addEmployee',
-                    message: 'Whould you like to add another employee?',
-                    default: false
-                }])
-                .then(({school, addEmployee}) => {
+                }
+            ])
+                .then(({name, id, email, school}) => {
                     staffArray.intern.push(new Intern(name, id, email, school))
-                    console.log(staffArray);
 
-                    if (addEmployee) {
-                        return EmployeeQuestions();
-                    }
+                    return EmployeeQuestions();
                 })            
             }
-            else if(choice === 'I am done building my team')
+            else
             {
-                //render HTML
+                writeData();
             }
         })
 };
+
+    const writeData = () => {
+        const data = generateMarkup(staffArray);
+        writeToFile('./dist/index.html', data);
+    }
 
   //function to initialize app
   const init = async () => {
