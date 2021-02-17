@@ -11,6 +11,7 @@ const staffArray = {
     'intern': []
 };
 
+//first ask questions about the manager....
 const ManagerQuestions = () => {
     return inquirer.prompt([
         {
@@ -33,12 +34,14 @@ const ManagerQuestions = () => {
             name: 'officeNumber',
             message: 'Please Enter The Team Manager\'s Office Number'
         }])
+        //create a new instance of the manager class and push it to the array, then call employee questions function
         .then(({name, id, email, officeNumber}) => {
             staffArray.manager.push(new Manager(name, id, email, officeNumber))
             EmployeeQuestions();
         })
   };
 
+  //first ask if they want to enter an intern, engineer or if they are finished
 const EmployeeQuestions = () => {
     return inquirer.prompt([
         {
@@ -47,6 +50,7 @@ const EmployeeQuestions = () => {
             message:'What type of employee would you like to add or are you finished?',
             choices: ['Engineer', 'Intern', 'I am done building my team']
         }])
+        //if the manager selects engineer then...
         .then(({choice}) => {
             if(choice === 'Engineer')
             {
@@ -72,12 +76,16 @@ const EmployeeQuestions = () => {
                     message: 'What is the Engineer\'s Github username?'
                 }
             ])
+
+            //after the questions are answered then create a new instance of the engineer class and push it to the array.  then call EmployeeQuestions again
             .then(({name, id, email, github}) => {
                     staffArray.engineer.push(new Engineer(name, id, email, github))
 
                     return EmployeeQuestions();
                 })
             }
+
+            //if the manager selects Intern.....
             else if(choice === 'Intern')
             {
                 return inquirer.prompt([
@@ -102,13 +110,14 @@ const EmployeeQuestions = () => {
                     message: 'Please enter Intern\'s school name'
                 }
             ])
-                .then(({name, id, email, school}) => {
+            //after the questions are answered then create a new instance of the Intern class and push it to the array.  then call EmployeeQuestions again
+            .then(({name, id, email, school}) => {
                     staffArray.intern.push(new Intern(name, id, email, school))
 
                     return EmployeeQuestions();
                 })            
             }
-            else
+            else  //if the manager selects "I am done building my team" then call write data
             {
                 writeData();
             }
@@ -116,7 +125,7 @@ const EmployeeQuestions = () => {
 };
 
     const writeData = () => {
-        const data = generateMarkup(staffArray);
+        const data = generateMarkup(staffArray); 
         writeToFile('./dist/index.html', data);
     }
 
@@ -124,7 +133,7 @@ const EmployeeQuestions = () => {
   const init = async () => {
     console.log('Welcome To The Team Profile Generator!');
     try {
-        ManagerQuestions(); //Prompt manager for manager information
+        ManagerQuestions(); //Prompt manager for team information
     } catch (err) {
       console.log(err);
       console.log('There was an error with user input');

@@ -1,5 +1,5 @@
 const renderCards = data => {
-    const managers = data.manager.map(function(obj) {
+    const managers = data.manager.map(function(obj) {  //for each manager array in the data object generate this markup
         return `
         <div class="card mr-3 shadow">
         <div class="card-header bg-primary text-light">
@@ -14,9 +14,9 @@ const renderCards = data => {
             </ul>
         </div>
     </div>`
-    }).join('');
+    }).join(''); //use .join('') otherise the will be a comma between the generated cards in the HTML
 
-    const engineers = data.engineer.map(function(obj) {
+    const engineers = data.engineer.map(function(obj) {//for each engineer array in the data object generate this markup
         return `
         <div class="card mr-3 shadow">
             <div class="card-header bg-primary text-light">
@@ -33,7 +33,7 @@ const renderCards = data => {
         </div>`
     }).join('');
 
-    const interns = data.intern.map(function(obj) {
+    const interns = data.intern.map(function(obj) { //for each intern array in the data object generate this markup
         return `
         <div class="card mr-3 shadow">
         <div class="card-header bg-primary text-light">
@@ -50,7 +50,7 @@ const renderCards = data => {
     </div>`
     }).join('');
 
-    return managers.concat(engineers).concat(interns);
+    return managers.concat(engineers).concat(interns);   //return the array to the ${mu} section below.  
 }
 
 const renderMarkup = (data) => {
